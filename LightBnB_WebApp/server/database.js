@@ -169,23 +169,23 @@ const getAllProperties = function (options, limit = 10) {
   }
 
   if (options.minimum_price_per_night) {
-    if (queryParams.length > 0) {
+    if (queryParams.length) {
       queryString += `AND `;
     } else {
       queryString += `WHERE `;
     }
-    queryParams.push(`${options.minimum_price_per_night}`);
+    queryParams.push(options.minimum_price_per_night * 100);
     queryString += `cost_per_night >= $${queryParams.length} `;
   }
   
 
   if (options.maximum_price_per_night) {
-    if (queryParams.length > 0) {
+    if (queryParams.length) {
       queryString += `AND `;
     } else {
       queryString += `WHERE `;
     }
-    queryParams.push(`${options.maximum_price_per_night}`);
+    queryParams.push(options.maximum_price_per_night * 100);
     queryString += `cost_per_night <= $${queryParams.length} `;
   }
 
@@ -195,12 +195,12 @@ const getAllProperties = function (options, limit = 10) {
     } else {
       queryString += `WHERE `;
     }
-    queryParams.push(`${options.owner_id}`);
+    queryParams.push(options.owner_id);
     queryString += `owner_id = $${queryParams.length} `;
   }
 
   if (options.minimum_rating) {
-    queryParams.push(`${options.minimum_rating}`);
+    queryParams.push(options.minimum_rating);
     queryString += `GROUP BY properties.id `;
     queryString += `HAVING avg(property_reviews.rating) >= $${queryParams.length} `;
     queryParams.push(limit);

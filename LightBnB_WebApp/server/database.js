@@ -179,6 +179,11 @@ const getAllProperties = function (options, limit = 10) {
     queryString += `AND cost_per_night <= $${queryParams.length} `;
   }
 
+  if (options.owner_id) {
+    queryParams.push(`${options.owner_id}`);
+    queryString += `AND owner_id = $${queryParams.length} `;
+  }
+
   if (options.minimum_rating) {
     queryParams.push(`${options.minimum_rating}`);
     queryString += `GROUP BY properties.id `;
@@ -196,7 +201,7 @@ const getAllProperties = function (options, limit = 10) {
     LIMIT $${queryParams.length};
     `;
   }
-  // console.log(queryString, queryParams);
+  console.log(queryString, queryParams);
   return pool.query(queryString, queryParams).then((res) => res.rows);
 };
 

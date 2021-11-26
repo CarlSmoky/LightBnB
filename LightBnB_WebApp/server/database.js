@@ -155,23 +155,19 @@ const getAllProperties = function(options, limit = 10) {
     queryString += `owner_id = $${queryParams.length} `;
   }
 
+  queryString += `GROUP BY properties.id `;
+
   if (options.minimum_rating) {
     queryParams.push(options.minimum_rating);
-    queryString += `GROUP BY properties.id `;
     queryString += `HAVING avg(property_reviews.rating) >= $${queryParams.length} `;
-    queryParams.push(limit);
-    queryString += `
-    ORDER BY cost_per_night
-    LIMIT $${queryParams.length};
-    `;
-  } else {
-    queryParams.push(limit);
-    queryString += `
-    GROUP BY properties.id
-    ORDER BY cost_per_night
-    LIMIT $${queryParams.length};
-    `;
   }
+  
+  queryParams.push(limit);
+  queryString += `
+  ORDER BY cost_per_night
+  LIMIT $${queryParams.length};
+  `;
+
   console.log(queryString, queryParams);
   return pool.query(queryString, queryParams).then((res) => res.rows);
 };
